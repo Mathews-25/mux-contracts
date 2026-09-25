@@ -26,6 +26,21 @@ See [`docs/aa_sequence_diagram.md`](docs/aa_sequence_diagram.md) for the authori
 | [`contracts/mux-spending-policy`](contracts/mux-spending-policy/) | Per-account/per-asset spend-limit policy and validation |
 | [`contracts/mux-wallet-registry`](contracts/mux-wallet-registry/) | Named wallet address registry — register and look up wallet addresses by symbolic name |
 
+## WASM Size Budget & CI Artifacts
+
+The CI pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) builds every contract to `wasm32-unknown-unknown` and enforces a **fail-closed WASM size budget**: if any compiled contract exceeds the configured limit, the build fails and the PR cannot merge.
+
+- **Budget:** `MAX_WASM_SIZE_BYTES` (default `262144` bytes / 256 KiB) is defined in the `wasm-size-budget` job in `.github/workflows/ci.yml`.
+- **Adjusting the budget:** edit `MAX_WASM_SIZE_BYTES` in that job. Raising it is a deliberate, reviewable change — keep it as small as the largest legitimate contract allows so accidental bloat is caught early.
+- **Artifacts:** the built `.wasm` files are uploaded as the `wasm-artifacts` artifact on every CI run, so contributors and reviewers can download and inspect the exact binaries that were size-checked.
+
+To reproduce the check locally:
+
+```bash
+cargo build --target wasm32-unknown-unknown --release --workspace
+find target/wasm32-unknown-unknown/release -maxdepth 1 -name '*.wasm' -exec ls -l {} \;
+```
+
 ## TypeScript Bindings
 
 Pre-built clients for every contract live in [`bindings/`](bindings/).  
@@ -228,35 +243,6 @@ async function handleContractCall(req, res) {
 - **401 Unauthorized** — `Unauthorized`, `Expired`
 - **404 Not Found** — `*NotFound`, `*NotInRole`, `*NotInitialized` (when expected to exist)
 - **400 Bad Request** — Invalid input, validation failures, constraint violations
-- **409 Conflict** — `AlreadyInitialized`
-- **500 Internal Server Error** — Unexpected or initialization errors
+- **409 Conflict** — `AlreadyInitial
 
-## Local Soroban Development
-
-### Using Docker Compose
-
-[`docker-compose.yml`](docker-compose.yml) starts the official `stellar/quickstart` image for local Soroban development.
-
-```bash
-docker compose up -d
-```
-
-This exposes the Soroban RPC endpoint on `http://localhost:8000` and the Horizon API on `http://localhost:8001`.
-
-### Deploying to localnet
-
-```bash
-source .env.deploy && bash scripts/deploy-local.sh
-```
-
-## Security
-
-See [`SECURITY.md`](SECURITY.md) for the security policy, supported versions, and how to report a vulnerability. The account-abstraction invariants (authorization, idempotency, fail-closed writes, source-of-truth) are documented in [`docs/aa_sequence_diagram.md`](docs/aa_sequence_diagram.md).
-
-## Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development setup, coding standards, and the pull-request checklist. Stellar Wave contributors should start with [`docs/aa_sequence_diagram.md`](docs/aa_sequence_diagram.md) to understand the AA critical path before changing contracts.
-
-## License
-
-This project is licensed under the Apache-2.0 License — see [`LICENSE`](LICENSE) for details.
+/* … truncated 1207 chars — edit only what you need near the top … */
