@@ -90,6 +90,22 @@ stable error codes, idempotency, and fail-closed requirements are defined in
 authoritative exit-criteria reference for AA work; report AA-related issues against
 its invariants.
 
+## Somzilla Status
+
+`Somzilla.md` is a historical status document and is **not** a canonical source of
+truth. Its content has been reconciled with the current repo state and archived; it
+now points to the canonical documentation below. Do not rely on `Somzilla.md` for
+security assumptions, invariants, or exit criteria.
+
+Canonical references:
+
+- [README.md](README.md) — project overview, build/test instructions, and contributor entry points
+- [CONTRIBUTING.md](CONTRIBUTING.md) — contribution workflow and review expectations
+- [CONTRACT_IDS.md](CONTRACT_IDS.md) — deployed contract ids per network
+- [docs/threat-model.md](docs/threat-model.md) — threat model and trust boundaries
+- [docs/aa-milestone-roadmap.md](docs/aa-milestone-roadmap.md) — AA invariants and exit criteria
+- [docs/rollback-guide.md](docs/rollback-guide.md) — rollback invariants, error codes, and kill-switch strategy
+
 ## Audit History
 
 See [docs/audit-prep.md](docs/audit-prep.md) for audit preparation notes and the [docs/access-control-checklist.md](docs/access-control-checklist.md) for the access control review checklist.
